@@ -16,15 +16,16 @@ from orchestration.health_checker import get_system_health, get_health_summary
 from orchestration.coordinator import DataCoordinator
 from storage.database import db_manager
 from storage.repositories import PlayerRepository, TeamRepository, FixtureRepository
+from api.routes import prediction
 
 # Initialize logger
 logger = get_logger("api")
 
 # Create FastAPI app
 app = FastAPI(
-    title="FPL Data Collection API",
-    description="API for FPL data collection system - data access, monitoring, and control",
-    version="1.0.0",
+    title="FPL Data Collection & Prediction API",
+    description="API for FPL data collection system and prediction engine - data access, monitoring, control, and transfer optimization",
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
 )
@@ -45,7 +46,7 @@ coordinator = DataCoordinator()
 @app.on_event("startup")
 async def startup_event():
     """Initialize application on startup."""
-    logger.info("Starting FPL Data Collection API")
+    logger.info("Starting FPL Data Collection & Prediction API")
 
     # Initialize database
     try:
@@ -59,7 +60,7 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup on application shutdown."""
-    logger.info("Shutting down FPL Data Collection API")
+    logger.info("Shutting down FPL Data Collection & Prediction API")
     db_manager.close()
 
 
@@ -74,8 +75,8 @@ async def health_check():
     return {
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
-        "version": "1.0.0",
-        "service": "FPL Data Collection API",
+        "version": "2.0.0",
+        "service": "FPL Data Collection & Prediction API",
     }
 
 
@@ -485,6 +486,14 @@ async def get_stats_overview():
         raise HTTPException(
             status_code=500, detail=f"Failed to get statistics: {str(e)}"
         )
+
+
+# ============================================================================
+# INCLUDE PREDICTION ROUTES
+# ============================================================================
+
+# Include prediction engine routes
+app.include_router(prediction.router, prefix="/api/v1")
 
 
 # ============================================================================

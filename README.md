@@ -1,37 +1,61 @@
-# FPL Data Collection System
+# FPL Data Collection & Prediction System
 
-A comprehensive, production-ready data collection system for the FPL Transfer Predictor that automatically collects, processes, and stores data from multiple sources in a unified format.
+A comprehensive, production-ready system for FPL data collection and transfer prediction that automatically collects, processes, and analyzes data from multiple sources to provide intelligent transfer recommendations.
 
 ## 🚀 Features
 
+### Data Collection
 - **Multi-Source Data Collection**: Automated scraping from 6+ data sources
 - **Robust Error Handling**: Rate limiting, retry logic, and graceful failure recovery
 - **Data Quality Assurance**: Comprehensive validation and cross-source verification
 - **Production Monitoring**: Health checks, performance metrics, and operational visibility
+
+### Prediction Engine
+- **Advanced Player Scoring**: Multi-dimensional Player Impact Score (PIS) calculation
+- **Transfer Optimization**: Intelligent transfer recommendations with risk assessment
+- **Backtesting Framework**: Historical performance validation and strategy comparison
+- **Confidence Scoring**: Reliability metrics for all predictions
+- **Position-Specific Analysis**: Tailored scoring for GK, DEF, MID, FWD positions
+
+### System Architecture
 - **Scalable Architecture**: Modular design with Docker containerization
 - **Comprehensive Testing**: Unit tests, integration tests, and automated validation
+- **Redis Caching**: Performance optimization for expensive computations
+- **RESTful API**: Complete API for data access and prediction services
 
 ## 📊 Data Sources
 
-| Source | Frequency | Data Type | Status |
-|--------|-----------|-----------|---------|
-| **FPL API** | Daily | Player stats, team data | ✅ Active |
-| **Understat** | Bi-weekly | xG, xA, advanced metrics | ✅ Active |
-| **FBRef** | Bi-weekly | Comprehensive statistics | ✅ Active |
+| Source            | Frequency | Data Type                | Status   |
+| ----------------- | --------- | ------------------------ | -------- |
+| **FPL API**       | Daily     | Player stats, team data  | ✅ Active |
+| **Understat**     | Bi-weekly | xG, xA, advanced metrics | ✅ Active |
+| **FBRef**         | Bi-weekly | Comprehensive statistics | ✅ Active |
 | **Transfermarkt** | Bi-weekly | Market values, transfers | ✅ Active |
-| **WhoScored** | Bi-weekly | Performance ratings | ✅ Active |
-| **Football-Data** | Bi-weekly | Historical matches | ✅ Active |
+| **WhoScored**     | Bi-weekly | Performance ratings      | ✅ Active |
+| **Football-Data** | Bi-weekly | Historical matches       | ✅ Active |
 
 ## 🏗️ Architecture
 
 ```
-FPL Data Collection System
-├── Scrapers (6 data sources)
-├── Processors (ETL pipeline)
-├── Storage (PostgreSQL)
-├── Orchestration (Scheduler)
-├── Monitoring (Health checks)
-└── Utils (Rate limiting, retry logic)
+FPL Data Collection & Prediction System
+├── Data Collection Layer
+│   ├── Scrapers (6 data sources)
+│   ├── Processors (ETL pipeline)
+│   └── Storage (PostgreSQL)
+├── Prediction Engine
+│   ├── Feature Engineering
+│   ├── Scoring Algorithms
+│   ├── Transfer Optimization
+│   └── Backtesting Framework
+├── API Layer
+│   ├── Data Access Endpoints
+│   ├── Prediction Endpoints
+│   └── Health Monitoring
+├── Infrastructure
+│   ├── Orchestration (Scheduler)
+│   ├── Redis Caching
+│   └── Docker Containerization
+└── Utils (Rate limiting, retry logic, monitoring)
 ```
 
 ## 🛠️ Quick Start
@@ -109,6 +133,85 @@ health = asyncio.run(get_system_health())
 print(f'System Status: {health.overall_status}')
 print(f'Healthy Scrapers: {health.healthy_scrapers}/{health.total_scrapers}')
 "
+
+# Test the API
+curl http://localhost:8000/health
+```
+
+## 🧠 Prediction Engine
+
+The FPL Prediction Engine provides intelligent transfer recommendations using advanced algorithms and comprehensive data analysis.
+
+### Key Components
+
+#### Player Impact Score (PIS)
+- **Multi-dimensional scoring** combining form, fixtures, team performance, and value
+- **Position-specific algorithms** for GK, DEF, MID, FWD positions
+- **Confidence scoring** to assess prediction reliability
+- **Risk assessment** including injury history and rotation risk
+
+#### Transfer Optimization
+- **Intelligent transfer recommendations** based on current squad analysis
+- **Multiple strategies**: Balanced, Aggressive, Conservative
+- **Constraint validation** ensuring FPL rule compliance
+- **Expected points gain** calculation for each recommendation
+
+#### Backtesting Framework
+- **Historical performance validation** using past gameweek data
+- **Strategy comparison** to identify optimal approaches
+- **Performance metrics** including correlation, precision, and calibration scores
+- **Risk-adjusted returns** analysis
+
+### Usage Examples
+
+#### Get Transfer Recommendations
+```bash
+# Using the API
+curl -X POST "http://localhost:8000/api/v1/prediction/transfers/recommendations" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "current_squad": {...},
+    "available_players": [...],
+    "strategy": "balanced",
+    "max_transfers": 2
+  }'
+```
+
+#### Calculate Player Scores
+```bash
+# Using the API
+curl -X POST "http://localhost:8000/api/v1/prediction/scores/player" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "player": {
+      "id": "player_123",
+      "name": "Mohamed Salah",
+      "position": "MID",
+      "team": "Liverpool",
+      "price": 13.0,
+      "form": 8.2,
+      "total_points": 220
+    }
+  }'
+```
+
+#### Run Backtest
+```bash
+# Using the command-line script
+python scripts/run_prediction_backtest.py \
+  --start-gw 1 \
+  --end-gw 10 \
+  --compare-strategies \
+  --save-results results.json
+```
+
+#### Manual Optimization
+```bash
+# Using the command-line script
+python scripts/run_prediction_optimization.py \
+  --strategy balanced \
+  --transfers 2 \
+  --budget 2.0
 ```
 
 ## 🔧 Development
@@ -129,6 +232,13 @@ fpl-data-collection/
 ├── processors/            # ETL pipeline
 ├── storage/               # Database models and access
 ├── orchestration/         # Scheduling and coordination
+├── prediction/            # Prediction engine
+│   ├── features/          # Feature engineering
+│   ├── scoring/           # Scoring algorithms
+│   ├── optimization/      # Transfer optimization
+│   └── validation/        # Backtesting framework
+├── api/                   # REST API endpoints
+│   └── routes/            # API route handlers
 ├── utils/                 # Common utilities
 ├── tests/                 # Test suite
 ├── scripts/               # Utility scripts
