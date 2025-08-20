@@ -56,6 +56,27 @@ class DatabaseConfig:
 
 
 @dataclass
+class PredictionConfig:
+    """Configuration for prediction engine."""
+
+    # Model settings
+    model_version: str = os.getenv("MODEL_VERSION", "3.0")
+    confidence_threshold: float = float(os.getenv("CONFIDENCE_THRESHOLD", "0.7"))
+    
+    # Caching settings
+    cache_enabled: bool = os.getenv("CACHE_ENABLED", "true").lower() == "true"
+    cache_ttl: int = int(os.getenv("CACHE_TTL", "3600"))  # 1 hour
+    
+    # Performance settings
+    max_recommendations: int = int(os.getenv("MAX_RECOMMENDATIONS", "5"))
+    backtest_lookback_seasons: int = int(os.getenv("BACKTEST_LOOKBACK_SEASONS", "2"))
+    
+    # Feature engineering settings
+    feature_lookback_gameweeks: int = int(os.getenv("FEATURE_LOOKBACK_GAMEWEEKS", "6"))
+    fixture_lookahead_gameweeks: int = int(os.getenv("FIXTURE_LOOKAHEAD_GAMEWEEKS", "5"))
+
+
+@dataclass
 class AppConfig:
     """Main application configuration."""
 
@@ -67,6 +88,7 @@ class AppConfig:
     # Sub-configurations
     scraper: ScraperConfig = field(default_factory=ScraperConfig)
     database: DatabaseConfig = field(default_factory=DatabaseConfig)
+    prediction: PredictionConfig = field(default_factory=PredictionConfig)
 
     # Application settings
     timezone: str = "UTC"
