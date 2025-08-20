@@ -1,6 +1,7 @@
 """
 Application configuration settings.
 """
+
 import os
 from dataclasses import dataclass, field
 from typing import Optional
@@ -13,18 +14,22 @@ load_dotenv()
 @dataclass
 class ScraperConfig:
     """Configuration for scrapers and data sources."""
+
     fpl_api_url: str = "https://fantasy.premierleague.com/api/"
     understat_url: str = "https://understat.com/"
     fbref_url: str = "https://fbref.com/"
     transfermarkt_url: str = "https://www.transfermarkt.com/"
     whoscored_url: str = "https://www.whoscored.com/"
-    football_data_url: str = "https://www.football-data.co.uk/"
-    
+    football_data_url: str = "https://api.football-data.org/v4"
+
+    # API Keys
+    football_data_api_key: str = os.getenv("FOOTBALL_DATA_API_KEY", "")
+
     # Request settings
     request_timeout: int = int(os.getenv("REQUEST_TIMEOUT", "30"))
     max_retries: int = int(os.getenv("MAX_RETRIES", "3"))
     rate_limit_delay: float = float(os.getenv("RATE_LIMIT_DELAY", "1.0"))
-    
+
     # User agent for web scraping
     user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 
@@ -32,17 +37,18 @@ class ScraperConfig:
 @dataclass
 class DatabaseConfig:
     """Database connection configuration."""
+
     host: str = os.getenv("DB_HOST", "localhost")
     port: int = int(os.getenv("DB_PORT", "5432"))
     database: str = os.getenv("DB_NAME", "fpl_data")
     username: str = os.getenv("DB_USER", "fpl_user")
     password: str = os.getenv("DB_PASSWORD", "")
-    
+
     @property
     def connection_string(self) -> str:
         """Generate SQLAlchemy connection string."""
         return f"postgresql://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}"
-    
+
     @property
     def async_connection_string(self) -> str:
         """Generate async SQLAlchemy connection string."""
@@ -52,24 +58,27 @@ class DatabaseConfig:
 @dataclass
 class AppConfig:
     """Main application configuration."""
+
     # Environment
     environment: str = os.getenv("ENVIRONMENT", "development")
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
     debug: bool = os.getenv("DEBUG", "false").lower() == "true"
-    
+
     # Sub-configurations
     scraper: ScraperConfig = field(default_factory=ScraperConfig)
     database: DatabaseConfig = field(default_factory=DatabaseConfig)
-    
+
     # Application settings
     timezone: str = "UTC"
     max_workers: int = int(os.getenv("MAX_WORKERS", "4"))
-    
+
     def __post_init__(self):
         """Validate configuration after initialization."""
         if self.environment == "production" and not self.database.password:
-            raise ValueError("Database password must be set via DB_PASSWORD environment variable")
+            raise ValueError(
+                "Database password must be set via DB_PASSWORD environment variable"
+            )
 
 
 # Global configuration instance
-config = AppConfig() 
+config = AppConfig()

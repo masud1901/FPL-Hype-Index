@@ -8,6 +8,16 @@ class ScraperException(Exception):
     pass
 
 
+class ScrapingError(ScraperException):
+    """Raised when scraping fails."""
+    pass
+
+
+class ValidationError(ScraperException):
+    """Raised when data validation fails."""
+    pass
+
+
 class ScraperConnectionError(ScraperException):
     """Raised when a scraper cannot connect to the data source."""
     pass
