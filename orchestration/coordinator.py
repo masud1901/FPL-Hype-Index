@@ -12,6 +12,8 @@ from storage.database import db_manager
 from storage.repositories import (
     PlayerRepository,
     PlayerStatsRepository,
+    TeamRepository,
+    FixtureRepository,
     DataQualityRepository,
     ScraperRunRepository,
 )
@@ -37,6 +39,8 @@ class DataCoordinator:
         # Initialize repositories
         self.player_repo = PlayerRepository()
         self.stats_repo = PlayerStatsRepository()
+        self.team_repo = TeamRepository()
+        self.fixture_repo = FixtureRepository()
         self.quality_repo = DataQualityRepository()
         self.run_repo = ScraperRunRepository()
 
@@ -345,12 +349,27 @@ class DataCoordinator:
             if "teams" in data:
                 for team_data in data["teams"]:
                     try:
-                        # TODO: Implement team repository and save teams
-                        pass
+                        self.team_repo.create_or_update_team(session, team_data)
+                        saved_count += 1
                     except Exception as e:
                         self.logger.warning(
                             "Failed to save team",
                             team_id=team_data.get("id"),
+                            error=str(e),
+                        )
+
+            # Save fixtures
+            if "fixtures" in data:
+                for fixture_data in data["fixtures"]:
+                    try:
+                        self.fixture_repo.create_or_update_fixture(
+                            session, fixture_data
+                        )
+                        saved_count += 1
+                    except Exception as e:
+                        self.logger.warning(
+                            "Failed to save fixture",
+                            fixture_id=fixture_data.get("id"),
                             error=str(e),
                         )
 

@@ -27,4 +27,8 @@ structlog==23.2.0
 
 # Code quality
 flake8==6.1.0
-mypy==1.7.1 
+mypy==1.7.1
+
+# API dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0 

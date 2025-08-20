@@ -57,6 +57,27 @@ services:
     restart: unless-stopped
     command: ["python", "-m", "orchestration.scheduler"]
 
+  api:
+    build: .
+    environment:
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-fpl_data}
+      - DB_USER=${DB_USER:-fpl_user}
+      - DB_PASSWORD=${DB_PASSWORD:-fpl_password}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+    volumes:
+      - ./logs:/app/logs
+      - .:/app
+    ports:
+      - "8001:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
   test:
     build: .
     environment:

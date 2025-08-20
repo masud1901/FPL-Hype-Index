@@ -16,6 +16,7 @@ from storage.database import db_manager
 from storage.repositories import (
     PlayerRepository,
     PlayerStatsRepository,
+    TeamRepository,
     DataQualityRepository,
     ScraperRunRepository,
 )
@@ -32,6 +33,7 @@ class ScraperRunner:
         self.logger = get_logger(__name__)
         self.player_repo = PlayerRepository()
         self.stats_repo = PlayerStatsRepository()
+        self.team_repo = TeamRepository()
         self.quality_repo = DataQualityRepository()
         self.run_repo = ScraperRunRepository()
         self.processor = DataProcessor()
@@ -73,7 +75,7 @@ class ScraperRunner:
 
             # Run the scraper
             scraper = FPLScraper()
-            raw_data = await scraper.run()
+            raw_data = await scraper.scrape()
 
             # Process the data
             processed_data = await self.processor.process_scraped_data(
@@ -169,6 +171,19 @@ class ScraperRunner:
                             self.logger.warning(
                                 "Failed to save player",
                                 player_id=player_data.get("id"),
+                                error=str(e),
+                            )
+
+                # Save teams
+                if "teams" in data:
+                    for team_data in data["teams"]:
+                        try:
+                            self.team_repo.create_or_update_team(session, team_data)
+                            saved_count += 1
+                        except Exception as e:
+                            self.logger.warning(
+                                "Failed to save team",
+                                team_id=team_data.get("id"),
                                 error=str(e),
                             )
 
