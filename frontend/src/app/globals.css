@@ -1,0 +1,320 @@
+@import "@fontsource/press-start-2p";
+@import "@fontsource/vt323";
+@import "@fontsource/silkscreen";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* FPL Website Colors */
+  --fpl-dark-blue: #1a1a2e; /* Main background */
+  --fpl-blue: #16213e; /* Secondary background */
+  --fpl-light-blue: #0f3460; /* Card backgrounds */
+  --fpl-accent-blue: #533483; /* Accent color */
+  --fpl-green: #00ff87; /* Success, good gut feelings */
+  --fpl-red: #ff6b6b; /* Warnings, reality checks */
+  --fpl-yellow: #ffd93d; /* Caution, mixed signals */
+  --fpl-white: #ffffff; /* Text color */
+  --fpl-gray: #a0a0a0; /* Secondary text */
+
+  /* Pixel Art Colors */
+  --pixel-green: var(--fpl-green);
+  --pixel-red: var(--fpl-red);
+  --pixel-yellow: var(--fpl-yellow);
+  --pixel-blue: var(--fpl-accent-blue);
+  --pixel-purple: #ff00ff;
+
+  /* Background Colors */
+  --pixel-bg-dark: var(--fpl-dark-blue);
+  --pixel-bg-medium: var(--fpl-blue);
+  --pixel-bg-light: var(--fpl-light-blue);
+
+  /* Text Colors */
+  --pixel-text-white: var(--fpl-white);
+  --pixel-text-black: #000000;
+  --pixel-text-gray: var(--fpl-gray);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--pixel-bg-dark);
+  color: var(--pixel-text-white);
+  font-family: "Silkscreen", monospace;
+  /* Force 4:3 aspect ratio container */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main container with 4:3 aspect ratio */
+.main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  aspect-ratio: 4/3;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Pixel Art Typography */
+.pixel-title {
+  font-family: "Press Start 2P", monospace;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.pixel-subtitle {
+  font-family: "VT323", monospace;
+  font-size: 16px;
+  letter-spacing: 1px;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.pixel-body {
+  font-family: "Silkscreen", monospace;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Horizontal dividers like in the image */
+.pixel-divider {
+  height: 4px;
+  background: var(--pixel-bg-medium);
+  border: 1px solid var(--pixel-text-white);
+  margin: 10px 0;
+}
+
+/* Pixel Art Button Styles */
+.pixel-button {
+  background: var(--pixel-bg-medium);
+  border: 3px solid var(--pixel-text-white);
+  box-shadow:
+    inset -3px -3px 0 var(--pixel-bg-dark),
+    inset 3px 3px 0 var(--pixel-text-gray);
+  font-family: "Press Start 2P", monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  color: var(--pixel-text-white);
+  outline: none;
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.pixel-button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset -2px -2px 0 var(--pixel-bg-dark),
+    inset 2px 2px 0 var(--pixel-text-gray);
+}
+
+.pixel-button:active {
+  transform: translateY(0);
+  box-shadow:
+    inset 2px 2px 0 var(--pixel-bg-dark),
+    inset -2px -2px 0 var(--pixel-text-gray);
+}
+
+.pixel-button-primary {
+  background: var(--pixel-green);
+  color: var(--pixel-text-black);
+}
+
+.pixel-button-warning {
+  background: var(--pixel-yellow);
+  color: var(--pixel-text-black);
+}
+
+.pixel-button-danger {
+  background: var(--pixel-red);
+  color: var(--pixel-text-white);
+}
+
+/* Pixel Art Card Styles */
+.pixel-card {
+  background: var(--pixel-bg-light);
+  border: 3px solid var(--pixel-text-white);
+  box-shadow:
+    inset -3px -3px 0 var(--pixel-bg-dark),
+    inset 3px 3px 0 var(--pixel-text-gray);
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.pixel-card-success {
+  border-color: var(--pixel-green);
+}
+
+.pixel-card-warning {
+  border-color: var(--pixel-yellow);
+}
+
+.pixel-card-danger {
+  border-color: var(--pixel-red);
+}
+
+/* Pixel Art Input Styles */
+.pixel-input {
+  background: var(--pixel-bg-dark);
+  border: 2px solid var(--pixel-text-white);
+  color: var(--pixel-text-white);
+  font-family: "Silkscreen", monospace;
+  font-size: 14px;
+  padding: 8px 12px;
+  outline: none;
+  width: 100%;
+}
+
+.pixel-input:focus {
+  border-color: var(--pixel-green);
+  box-shadow: 0 0 8px var(--pixel-green);
+}
+
+/* Pixel Art Progress Bar */
+.pixel-progress-container {
+  margin: 8px 0;
+}
+
+.pixel-progress-bar {
+  background: var(--pixel-bg-dark);
+  border: 2px solid var(--pixel-text-white);
+  height: 20px;
+  position: relative;
+}
+
+.pixel-progress-fill {
+  background: var(--pixel-green);
+  height: 100%;
+  transition: width 0.3s ease;
+  box-shadow: inset 0 0 0 1px var(--pixel-text-black);
+}
+
+/* Pixel Art Loading Animation */
+.pixel-loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--pixel-text-white);
+  border-radius: 0;
+  animation: pixel-spin 1s linear infinite;
+}
+
+@keyframes pixel-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Pixel Art Hover Effects */
+.pixel-hover-effect {
+  transition: all 0.1s ease;
+}
+
+.pixel-hover-effect:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 0 var(--pixel-text-black),
+    inset -2px -2px 0 var(--pixel-bg-dark),
+    inset 2px 2px 0 var(--pixel-text-gray);
+}
+
+/* Pixel Art Success Animation */
+.pixel-success-animation {
+  animation: pixel-bounce 0.5s ease;
+}
+
+@keyframes pixel-bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Compact layout for 4:3 aspect ratio */
+.compact-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  max-height: 600px;
+}
+
+.compact-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.compact-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.compact-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 10px;
+    aspect-ratio: auto;
+    max-height: none;
+  }
+
+  .pixel-title {
+    font-size: 16px;
+  }
+
+  .pixel-subtitle {
+    font-size: 14px;
+  }
+
+  .pixel-button {
+    font-size: 8px;
+    padding: 8px 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pixel-title {
+    font-size: 24px;
+  }
+
+  .pixel-subtitle {
+    font-size: 18px;
+  }
+}
