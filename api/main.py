@@ -1,6 +1,6 @@
 """
-FastAPI application for FPL Data Collection System.
-Provides endpoints for data access, system monitoring, and manual triggers.
+FastAPI application for FPL Chase API.
+The powerful backend engine for FPL Hype Index - empowering your gut feelings with data-driven insights.
 """
 
 from fastapi import FastAPI, HTTPException, BackgroundTasks
@@ -23,8 +23,8 @@ logger = get_logger("api")
 
 # Create FastAPI app
 app = FastAPI(
-    title="FPL Data Collection & Prediction API",
-    description="API for FPL data collection system and prediction engine - data access, monitoring, control, and transfer optimization",
+    title="FPL Chase API",
+    description="The powerful backend engine for FPL Hype Index. Empowering your gut feelings with data-driven insights through advanced Player Impact Score (PIS) calculations, transfer optimization, and comprehensive FPL analytics.",
     version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
@@ -46,7 +46,7 @@ coordinator = DataCoordinator()
 @app.on_event("startup")
 async def startup_event():
     """Initialize application on startup."""
-    logger.info("Starting FPL Data Collection & Prediction API")
+    logger.info("Starting FPL Chase API - The Backend Engine for FPL Hype Index")
 
     # Initialize database
     try:
@@ -60,7 +60,7 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     """Cleanup on application shutdown."""
-    logger.info("Shutting down FPL Data Collection & Prediction API")
+    logger.info("Shutting down FPL Chase API")
     db_manager.close()
 
 
@@ -76,7 +76,9 @@ async def health_check():
         "status": "healthy",
         "timestamp": datetime.now().isoformat(),
         "version": "2.0.0",
-        "service": "FPL Data Collection & Prediction API",
+        "service": "FPL Chase API",
+        "brand": "FPL Hype Index",
+        "motto": "Empower Your Gut Feelings",
     }
 
 

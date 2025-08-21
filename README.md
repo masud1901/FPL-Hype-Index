@@ -1,438 +1,254 @@
-# FPL Data Collection & Prediction System
+# FPL Chase API 🏃‍♂️
 
-A comprehensive, production-ready system for FPL data collection and transfer prediction that automatically collects, processes, and analyzes data from multiple sources to provide intelligent transfer recommendations.
+**The Backend Engine for FPL Hype Index**
 
-## 🚀 Features
+*"Empower Your Gut Feelings"*
 
-### Data Collection
-- **Multi-Source Data Collection**: Automated scraping from 6+ data sources
-- **Robust Error Handling**: Rate limiting, retry logic, and graceful failure recovery
-- **Data Quality Assurance**: Comprehensive validation and cross-source verification
-- **Production Monitoring**: Health checks, performance metrics, and operational visibility
+---
 
-### Prediction Engine
-- **Advanced Player Scoring**: Multi-dimensional Player Impact Score (PIS) calculation
-- **Transfer Optimization**: Intelligent transfer recommendations with risk assessment
-- **Backtesting Framework**: Historical performance validation and strategy comparison
-- **Confidence Scoring**: Reliability metrics for all predictions
-- **Position-Specific Analysis**: Tailored scoring for GK, DEF, MID, FWD positions
+## About FPL Chase
 
-### System Architecture
-- **Scalable Architecture**: Modular design with Docker containerization
-- **Comprehensive Testing**: Unit tests, integration tests, and automated validation
-- **Redis Caching**: Performance optimization for expensive computations
-- **RESTful API**: Complete API for data access and prediction services
+**FPL Chase** is the powerful backend API that powers **FPL Hype Index** - the ultimate platform for validating your FPL instincts with data-driven insights.
 
-## 📊 Data Sources
+Every FPL manager knows the feeling: you're watching a match, and suddenly a player catches your eye. Maybe it's a midfielder making dangerous runs, a defender with perfect positioning, or a forward with that "something special." Your gut screams, **"This is the guy!"**
 
-| Source            | Frequency | Data Type                | Status   |
-| ----------------- | --------- | ------------------------ | -------- |
-| **FPL API**       | Daily     | Player stats, team data  | ✅ Active |
-| **Understat**     | Bi-weekly | xG, xA, advanced metrics | ✅ Active |
-| **FBRef**         | Bi-weekly | Comprehensive statistics | ✅ Active |
-| **Transfermarkt** | Bi-weekly | Market values, transfers | ✅ Active |
-| **WhoScored**     | Bi-weekly | Performance ratings      | ✅ Active |
-| **Football-Data** | Bi-weekly | Historical matches       | ✅ Active |
+But then the doubt creeps in. Should you trust your instinct, or should you rely on the cold, hard data?
 
-## 🏗️ Architecture
+**FPL Hype Index** doesn't make you choose. We empower your gut feelings with the data to back them up.
+
+---
+
+## The Brand Philosophy: Data-Driven Intuition
+
+### The Eternal FPL Debate: "The Eye Test vs. The Algorithm"
+
+- **The Eye Test:** "I watched the game, and Player X looked electric. He was everywhere, making dangerous runs. I have a good feeling about him."
+- **The Algorithm:** "Player X has an xG of 0.12, faces three top-tier defenses next, and has a high rotation risk. Do not buy."
+
+**FPL Hype Index** resolves this conflict beautifully. We don't say, "Your gut is wrong." We say, **"You have a hunch? Let's prove it."**
+
+Your tool becomes the ultimate validation engine. It's the Iron Man suit for the FPL manager: your instinct is still in control, but it's amplified and supercharged by powerful data.
+
+---
+
+## Architecture Overview
 
 ```
-FPL Data Collection & Prediction System
-├── Data Collection Layer
-│   ├── Scrapers (6 data sources)
-│   ├── Processors (ETL pipeline)
-│   └── Storage (PostgreSQL)
-├── Prediction Engine
-│   ├── Feature Engineering
-│   ├── Scoring Algorithms
-│   ├── Transfer Optimization
-│   └── Backtesting Framework
-├── API Layer
-│   ├── Data Access Endpoints
-│   ├── Prediction Endpoints
-│   └── Health Monitoring
-├── Infrastructure
-│   ├── Orchestration (Scheduler)
-│   ├── Redis Caching
-│   └── Docker Containerization
-└── Utils (Rate limiting, retry logic, monitoring)
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   FPL Hype      │    │   FPL Chase     │    │   Data Sources  │
+│   Index         │◄──►│   API           │◄──►│   (FPL, etc.)   │
+│   (Frontend)    │    │   (Backend)     │    │                 │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   User          │    │   Prediction    │    │   PostgreSQL    │
+│   Interface     │    │   Engine        │    │   Database      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-## 🛠️ Quick Start
+### FPL Chase API (This Repository)
+- **RESTful API** - Complete backend services for FPL data and predictions
+- **Prediction Engine** - Advanced Player Impact Score (PIS) calculations
+- **Data Collection** - Automated FPL data scraping and processing
+- **Transfer Optimization** - Intelligent transfer recommendations
+- **Redis Caching** - Performance optimization for computed features
+
+### FPL Hype Index (Frontend Platform)
+- **Analytics Dashboard** - Visual insights and player comparisons
+- **Team Analysis** - Personalized squad recommendations
+- **Hype Tracking** - Monitor player popularity vs. performance
+- **Transfer Planner** - Interactive transfer optimization tools
+
+---
+
+## Core Features
+
+### 🎯 Player Impact Score (PIS)
+Our proprietary algorithm that breaks down player performance into five key components:
+- **Advanced Quality Score (35%)** - Underlying performance metrics
+- **Form Consistency Score (25%)** - Recent performance trends
+- **Team Momentum Score (15%)** - Team's overall form
+- **Fixture Score (15%)** - Upcoming fixture difficulty
+- **Value Score (10%)** - Price-to-performance ratio
+
+### 🔄 Transfer Optimizer
+Find the optimal transfer combinations that maximize your squad's potential while respecting FPL constraints.
+
+### 📊 Hype Index Validation
+Compare your gut feelings with data-driven insights:
+- **Gut Check Score** - How well your instincts align with the data
+- **Reality Check** - Hype vs. actual underlying stats
+- **Decision Validation** - Confirmation that your transfer makes sense
+
+### 🎮 Team Analysis
+Get personalized insights for your specific FPL team:
+- Current squad performance breakdown
+- Position-specific recommendations
+- Budget optimization suggestions
+- Risk assessment and mitigation
+
+---
+
+## Quick Start
 
 ### Prerequisites
-
 - Docker and Docker Compose
-- Python 3.9+ (for development)
-- PostgreSQL (handled by Docker)
+- Python 3.9+
 
-### 1. Clone and Setup
-
+### Installation
 ```bash
+# Clone the repository
 git clone <repository-url>
-cd fpl-data-collection
-cp .env.example .env
+cd fpl-chase
+
+# Start the services
+docker compose up -d
+
+# The API will be available at http://localhost:8001
 ```
 
-### 2. Configure Environment
-
-Edit `.env` file with your configuration:
-
-```env
-# Database Configuration
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=fpl_data
-DB_USER=fpl_user
-DB_PASSWORD=your_secure_password
-
-# Scraper Configuration
-SCRAPER_RATE_LIMIT_DELAY=1.0
-SCRAPER_MAX_RETRIES=3
-SCRAPER_REQUEST_TIMEOUT=30
-
-# Logging
-LOG_LEVEL=INFO
-LOG_FORMAT=json
-
-# API Keys (if needed)
-FOOTBALL_DATA_API_KEY=your_api_key
-```
-
-### 3. Start the System
-
+### API Usage Example
 ```bash
-# Start all services
-docker-compose up -d
+# Get player PIS scores
+curl -X GET "http://localhost:8001/api/v1/prediction/scores/player/123"
 
-# View logs
-docker-compose logs -f
-
-# Check system health
-docker-compose exec scheduler python -c "
-from orchestration.health_checker import get_health_summary
-import asyncio
-print(asyncio.run(get_health_summary()))
-"
-```
-
-### 4. Verify Installation
-
-```bash
-# Check if all services are running
-docker-compose ps
-
-# Test data collection manually
-docker-compose exec scheduler python scripts/run_scrapers.py --scraper fpl
-
-# Run health check
-docker-compose exec scheduler python -c "
-from orchestration.health_checker import get_system_health
-import asyncio
-health = asyncio.run(get_system_health())
-print(f'System Status: {health.overall_status}')
-print(f'Healthy Scrapers: {health.healthy_scrapers}/{health.total_scrapers}')
-"
-
-# Test the API
-curl http://localhost:8000/health
-```
-
-## 🧠 Prediction Engine
-
-The FPL Prediction Engine provides intelligent transfer recommendations using advanced algorithms and comprehensive data analysis.
-
-### Key Components
-
-#### Player Impact Score (PIS)
-- **Multi-dimensional scoring** combining form, fixtures, team performance, and value
-- **Position-specific algorithms** for GK, DEF, MID, FWD positions
-- **Confidence scoring** to assess prediction reliability
-- **Risk assessment** including injury history and rotation risk
-
-#### Transfer Optimization
-- **Intelligent transfer recommendations** based on current squad analysis
-- **Multiple strategies**: Balanced, Aggressive, Conservative
-- **Constraint validation** ensuring FPL rule compliance
-- **Expected points gain** calculation for each recommendation
-
-#### Backtesting Framework
-- **Historical performance validation** using past gameweek data
-- **Strategy comparison** to identify optimal approaches
-- **Performance metrics** including correlation, precision, and calibration scores
-- **Risk-adjusted returns** analysis
-
-### Usage Examples
-
-#### Get Transfer Recommendations
-```bash
-# Using the API
-curl -X POST "http://localhost:8000/api/v1/prediction/transfers/recommendations" \
+# Get transfer recommendations
+curl -X POST "http://localhost:8001/api/v1/prediction/transfers/recommendations" \
   -H "Content-Type: application/json" \
   -d '{
-    "current_squad": {...},
-    "available_players": [...],
+    "team_id": 2165234,
     "strategy": "balanced",
     "max_transfers": 2
   }'
+
+# Analyze your FPL team
+python scripts/fpl_team_transfer_calculator.py
 ```
 
-#### Calculate Player Scores
-```bash
-# Using the API
-curl -X POST "http://localhost:8000/api/v1/prediction/scores/player" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "player": {
-      "id": "player_123",
-      "name": "Mohamed Salah",
-      "position": "MID",
-      "team": "Liverpool",
-      "price": 13.0,
-      "form": 8.2,
-      "total_points": 220
-    }
-  }'
-```
+---
 
-#### Run Backtest
-```bash
-# Using the command-line script
-python scripts/run_prediction_backtest.py \
-  --start-gw 1 \
-  --end-gw 10 \
-  --compare-strategies \
-  --save-results results.json
-```
+## API Endpoints
 
-#### Manual Optimization
-```bash
-# Using the command-line script
-python scripts/run_prediction_optimization.py \
-  --strategy balanced \
-  --transfers 2 \
-  --budget 2.0
-```
+### Prediction Endpoints
+- `GET /api/v1/prediction/scores/player/{player_id}` - Get player PIS score
+- `POST /api/v1/prediction/transfers/recommendations` - Get transfer recommendations
+- `GET /api/v1/prediction/team/{team_id}/analysis` - Analyze FPL team
+- `POST /api/v1/prediction/backtest` - Run backtesting analysis
 
-## 🔧 Development
+### Data Endpoints
+- `GET /api/v1/data/players` - Get all players
+- `GET /api/v1/data/teams` - Get all teams
+- `GET /api/v1/data/fixtures` - Get fixtures
+- `GET /api/v1/data/player/{player_id}/stats` - Get player statistics
+
+### Health & Monitoring
+- `GET /health` - API health check
+- `GET /api/v1/status` - System status
+- `GET /api/v1/metrics` - Performance metrics
+
+---
+
+## The FPL Hype Index Promise
+
+**We believe the ultimate FPL manager is a powerful combination of human passion and machine intelligence.**
+
+- **Respect Your Instincts** - Your football knowledge and intuition are invaluable
+- **Validate with Data** - We provide the evidence to back up your hunches
+- **Empower Your Decisions** - Make confident transfers with both heart and head
+- **Improve Your Game** - Learn from the data while staying true to your instincts
+
+---
+
+## Data Flow Architecture
+
+### 1. Data Collection Layer
+- **FPL API** - Official Fantasy Premier League data
+- **PostgreSQL** - Primary data storage for players, stats, fixtures
+- **Automated Scraping** - Daily data updates and processing
+
+### 2. Prediction Engine
+- **Player Impact Score** - Multi-factor player evaluation algorithm
+- **Transfer Optimization** - Constraint-based transfer recommendation engine
+- **Backtesting Framework** - Historical performance validation
+- **Risk Assessment** - Injury, rotation, and ownership risk analysis
+
+### 3. API Layer
+- **FastAPI** - High-performance RESTful API
+- **Redis Cache** - 1-day caching for predictions and computed features
+- **Rate Limiting** - API protection and fair usage
+- **Authentication** - Secure access control
+
+### 4. Integration Layer
+- **FPL Hype Index Frontend** - Web-based analytics platform
+- **Mobile Apps** - iOS/Android applications
+- **Third-party Tools** - Integration with existing FPL tools
+
+---
+
+## Development
 
 ### Project Structure
-
 ```
-fpl-data-collection/
-├── config/                 # Configuration management
-├── scrapers/              # Data source scrapers
-│   ├── base/              # Abstract base classes
-│   ├── fpl_api/           # FPL API scraper
-│   ├── understat/         # Understat scraper
-│   ├── fbref/             # FBRef scraper
-│   ├── transfermarkt/     # Transfermarkt scraper
-│   ├── whoscored/         # WhoScored scraper
-│   └── football_data/     # Football-Data scraper
-├── processors/            # ETL pipeline
-├── storage/               # Database models and access
-├── orchestration/         # Scheduling and coordination
+fpl-chase/
+├── api/                   # FastAPI application
 ├── prediction/            # Prediction engine
-│   ├── features/          # Feature engineering
-│   ├── scoring/           # Scoring algorithms
-│   ├── optimization/      # Transfer optimization
-│   └── validation/        # Backtesting framework
-├── api/                   # REST API endpoints
-│   └── routes/            # API route handlers
-├── utils/                 # Common utilities
-├── tests/                 # Test suite
-├── scripts/               # Utility scripts
-└── docs/                  # Documentation
+│   ├── scoring/          # PIS algorithms
+│   ├── optimization/     # Transfer optimization
+│   └── validation/       # Backtesting framework
+├── storage/              # Database models and access
+├── scrapers/             # Data collection
+├── utils/                # Common utilities
+├── scripts/              # Utility scripts
+└── tests/                # Test suite
 ```
 
-### Development Workflow
-
-1. **Branch Strategy**:
-   ```bash
-   git checkout develop
-   git pull origin develop
-   git checkout -b feature/your-feature-name
-   ```
-
-2. **Testing**:
-   ```bash
-   # Run all tests
-   pytest
-
-   # Run specific test categories
-   pytest tests/test_processors/
-   pytest tests/test_scrapers/
-
-   # Run with coverage
-   pytest --cov=processors --cov=scrapers
-
-   # Run integration tests
-   docker-compose -f docker-compose.test.yml up --abort-on-container-exit
-   ```
-
-3. **Code Quality**:
-   ```bash
-   # Lint code
-   flake8 processors/ scrapers/ utils/
-
-   # Type checking
-   mypy processors/ scrapers/ utils/
-   ```
-
-### Adding New Data Sources
-
-1. Create scraper in `scrapers/new_source/`
-2. Inherit from `BaseScraper`
-3. Implement required methods
-4. Add to coordinator registration
-5. Update scheduler configuration
-6. Add tests
-
-Example:
-```python
-# scrapers/new_source/new_scraper.py
-from scrapers.base.base_scraper import BaseScraper
-
-class NewScraper(BaseScraper):
-    async def scrape(self):
-        # Implementation
-        pass
-    
-    def validate_data(self, data):
-        # Validation logic
-        pass
-```
-
-## 📈 Monitoring & Operations
-
-### Health Monitoring
-
-The system includes comprehensive health monitoring:
-
+### Development Setup
 ```bash
-# Get current health status
-curl http://localhost:8000/health
+# Install dependencies
+pip install -r requirements.txt
 
-# Export health report
-docker-compose exec scheduler python -c "
-from orchestration.health_checker import health_checker
-import asyncio
-asyncio.run(health_checker.export_health_report('/app/logs/health_report.json'))
-"
-```
-
-### Logging
-
-Structured logging with JSON format:
-
-```bash
-# View scraper logs
-docker-compose logs scraper
-
-# View scheduler logs
-docker-compose logs scheduler
-
-# View database logs
-docker-compose logs database
-```
-
-### Performance Metrics
-
-- **Success Rates**: Per-scraper success/failure tracking
-- **Response Times**: API response time monitoring
-- **Data Quality**: Validation error tracking
-- **System Uptime**: Overall system availability
-
-## 🧪 Testing
-
-### Test Categories
-
-- **Unit Tests**: Individual component testing
-- **Integration Tests**: End-to-end pipeline testing
-- **Performance Tests**: Load and stress testing
-- **Health Tests**: System health validation
-
-### Running Tests
-
-```bash
-# All tests
+# Run tests
 pytest
 
-# Specific test file
-pytest tests/test_processors/test_data_processor.py
-
-# With verbose output
-pytest -v
-
-# Generate coverage report
-pytest --cov=processors --cov=scrapers --cov-report=html
+# Start development server
+uvicorn api.main:app --reload --port 8001
 ```
 
-## 🔒 Production Deployment
+---
 
-### Security Considerations
+## Contributing
 
-- Use strong database passwords
-- Implement API key rotation
-- Monitor rate limits
-- Regular security updates
-- Backup strategies
+We welcome contributions that align with our philosophy of empowering FPL managers' instincts with data-driven insights.
 
-### Scaling
-
-- Horizontal scaling with multiple scraper instances
-- Database connection pooling
-- Redis caching for rate limiting
-- Load balancing for high availability
-
-### Backup & Recovery
-
-```bash
-# Database backup
-docker-compose exec database pg_dump -U fpl_user fpl_data > backup.sql
-
-# Restore from backup
-docker-compose exec -T database psql -U fpl_user fpl_data < backup.sql
-```
-
-## 📚 Documentation
-
-- [Architecture Overview](docs/data_collection_architecture.md)
-- [API Documentation](docs/api_documentation.md)
-- [Deployment Guide](docs/deployment_guide.md)
-- [Troubleshooting](docs/troubleshooting.md)
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests
-5. Submit a pull request
-
-### Code Standards
-
+### Development Guidelines
 - Follow PEP 8 style guide
-- Add type hints
-- Write docstrings
+- Add type hints and docstrings
 - Include tests for new features
-- Update documentation
+- Update API documentation
+- Respect the "Empower Your Gut Feelings" philosophy
 
-## 📄 License
+---
+
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+---
 
-- **Issues**: Create GitHub issues for bugs and feature requests
-- **Documentation**: Check the docs/ directory
-- **Health Monitoring**: Use the built-in health checker
-- **Logs**: Check Docker logs for debugging
+## Connect With Us
 
-## 🚀 Roadmap
+- **FPL Hype Index**: [fplhypeindex.com](https://fplhypeindex.com)
+- **Twitter**: [@FPLHypeIndex](https://twitter.com/FPLHypeIndex)
+- **Discord**: [FPL Hype Index Community](https://discord.gg/fpl-hype-index)
 
-- [ ] Real-time data streaming
-- [ ] Machine learning integration
-- [ ] Advanced analytics dashboard
-- [ ] Mobile app support
-- [ ] Additional data sources 
+---
+
+**Remember: Trust your gut. We'll handle the numbers.** 🎯
+
+*"Empower Your Gut Feelings"*
+
+---
+
+**FPL Chase API** - The powerful backend engine for **FPL Hype Index** 🏃‍♂️ 
