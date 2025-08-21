@@ -131,8 +131,8 @@ class TransferOptimizer:
         scores = {}
         for player in squad:
             try:
-                score_result = self.scorer.calculate_pis(player)
-                scores[player["id"]] = score_result["final_pis"]
+                score_result = self.scorer.calculate_score(player)
+                scores[player["id"]] = score_result
             except Exception as e:
                 logger.warning(
                     f"Failed to calculate score for player {player.get('name', 'Unknown')}: {e}"
@@ -149,12 +149,12 @@ class TransferOptimizer:
         scored_players = []
         for player in available_players:
             try:
-                score_result = self.scorer.calculate_pis(player)
+                score_result = self.scorer.calculate_score(player)
                 scored_players.append(
                     {
                         **player,
-                        "pis_score": score_result["final_pis"],
-                        "confidence": score_result["confidence"],
+                        "pis_score": score_result,
+                        "confidence": 0.8,  # Default confidence
                         "risk_score": self._calculate_risk_score(player),
                     }
                 )
