@@ -6,6 +6,6 @@ Provides tools to evaluate model performance and generate performance reports.
 """
 
 from .backtesting.backtest_engine import BacktestEngine
-from .metrics.performance_metrics import PerformanceMetrics
+from .backtesting.performance_metrics import PerformanceMetrics
 
-__all__ = ["BacktestEngine", "PerformanceMetrics"] 
+__all__ = ["BacktestEngine", "PerformanceMetrics"]

@@ -11,7 +11,11 @@ from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 import pandas as pd
 
-from ..constraints.fpl_constraints import FPLConstraints
+from ..constraints.fpl_constraints import (
+    FPLConstraintChecker,
+    SquadConstraints,
+    TransferConstraints,
+)
 from ...scoring.master_score.player_impact_score import PlayerImpactScore
 from ...config.scoring_weights import ScoringWeights
 
@@ -52,7 +56,9 @@ class TransferOptimizer:
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         """Initialize the transfer optimizer"""
         self.config = config or {}
-        self.constraints = FPLConstraints()
+        self.constraints = FPLConstraintChecker(
+            SquadConstraints(), TransferConstraints()
+        )
         self.scorer = PlayerImpactScore(config)
         self.weights = ScoringWeights()
 

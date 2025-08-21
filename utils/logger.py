@@ -1,17 +1,18 @@
 """
 Structured logging utility for the FPL Data Collection System.
 """
+
 import logging
 import sys
 from typing import Any, Dict, Optional
 from datetime import datetime
 import structlog
-from config.settings import config
+from config.settings import get_settings
 
 
 def setup_logging() -> None:
     """Configure structured logging for the application."""
-    
+
     # Configure structlog
     structlog.configure(
         processors=[
@@ -23,7 +24,11 @@ def setup_logging() -> None:
             structlog.processors.StackInfoRenderer(),
             structlog.processors.format_exc_info,
             structlog.processors.UnicodeDecoder(),
-            structlog.processors.JSONRenderer() if config.environment == "production" else structlog.dev.ConsoleRenderer(),
+            (
+                structlog.processors.JSONRenderer()
+                if get_settings().ENVIRONMENT == "production"
+                else structlog.dev.ConsoleRenderer()
+            ),
         ],
         context_class=dict,
         logger_factory=structlog.stdlib.LoggerFactory(),
@@ -34,10 +39,10 @@ def setup_logging() -> None:
 
 def get_logger(name: str) -> structlog.stdlib.BoundLogger:
     """Get a structured logger instance.
-    
+
     Args:
         name: The logger name (usually __name__)
-        
+
     Returns:
         A configured structured logger
     """
@@ -46,20 +51,17 @@ def get_logger(name: str) -> structlog.stdlib.BoundLogger:
 
 class ScraperLogger:
     """Specialized logger for scrapers with additional context."""
-    
+
     def __init__(self, scraper_name: str):
         self.logger = get_logger(f"scraper.{scraper_name}")
         self.scraper_name = scraper_name
-    
+
     def log_scrape_start(self, url: str, **kwargs) -> None:
         """Log the start of a scraping operation."""
         self.logger.info(
-            "Scraping started",
-            scraper=self.scraper_name,
-            url=url,
-            **kwargs
+            "Scraping started", scraper=self.scraper_name, url=url, **kwargs
         )
-    
+
     def log_scrape_success(self, data_count: int, duration: float, **kwargs) -> None:
         """Log successful scraping completion."""
         self.logger.info(
@@ -67,9 +69,9 @@ class ScraperLogger:
             scraper=self.scraper_name,
             data_count=data_count,
             duration_seconds=duration,
-            **kwargs
+            **kwargs,
         )
-    
+
     def log_scrape_error(self, error: Exception, url: str, **kwargs) -> None:
         """Log scraping errors."""
         self.logger.error(
@@ -78,27 +80,29 @@ class ScraperLogger:
             url=url,
             error=str(error),
             error_type=type(error).__name__,
-            **kwargs
+            **kwargs,
         )
-    
-    def log_data_validation(self, is_valid: bool, issues: Optional[list] = None, **kwargs) -> None:
+
+    def log_data_validation(
+        self, is_valid: bool, issues: Optional[list] = None, **kwargs
+    ) -> None:
         """Log data validation results."""
         self.logger.info(
             "Data validation completed",
             scraper=self.scraper_name,
             is_valid=is_valid,
             issues=issues or [],
-            **kwargs
+            **kwargs,
         )
 
 
 class ProcessorLogger:
     """Specialized logger for data processors."""
-    
+
     def __init__(self, processor_name: str):
         self.logger = get_logger(f"processor.{processor_name}")
         self.processor_name = processor_name
-    
+
     def log_processing_start(self, data_count: int, source: str, **kwargs) -> None:
         """Log the start of data processing."""
         self.logger.info(
@@ -106,19 +110,21 @@ class ProcessorLogger:
             processor=self.processor_name,
             data_count=data_count,
             source=source,
-            **kwargs
+            **kwargs,
         )
-    
-    def log_processing_success(self, processed_count: int, duration: float, **kwargs) -> None:
+
+    def log_processing_success(
+        self, processed_count: int, duration: float, **kwargs
+    ) -> None:
         """Log successful processing completion."""
         self.logger.info(
             "Data processing completed successfully",
             processor=self.processor_name,
             processed_count=processed_count,
             duration_seconds=duration,
-            **kwargs
+            **kwargs,
         )
-    
+
     def log_processing_error(self, error: Exception, **kwargs) -> None:
         """Log processing errors."""
         self.logger.error(
@@ -126,35 +132,34 @@ class ProcessorLogger:
             processor=self.processor_name,
             error=str(error),
             error_type=type(error).__name__,
-            **kwargs
+            **kwargs,
         )
 
 
 class StorageLogger:
     """Specialized logger for storage operations."""
-    
+
     def __init__(self):
         self.logger = get_logger("storage")
-    
+
     def log_save_start(self, table: str, record_count: int, **kwargs) -> None:
         """Log the start of a save operation."""
         self.logger.info(
-            "Saving data to storage",
-            table=table,
-            record_count=record_count,
-            **kwargs
+            "Saving data to storage", table=table, record_count=record_count, **kwargs
         )
-    
-    def log_save_success(self, table: str, saved_count: int, duration: float, **kwargs) -> None:
+
+    def log_save_success(
+        self, table: str, saved_count: int, duration: float, **kwargs
+    ) -> None:
         """Log successful save completion."""
         self.logger.info(
             "Data saved successfully",
             table=table,
             saved_count=saved_count,
             duration_seconds=duration,
-            **kwargs
+            **kwargs,
         )
-    
+
     def log_save_error(self, error: Exception, table: str, **kwargs) -> None:
         """Log save errors."""
         self.logger.error(
@@ -162,7 +167,7 @@ class StorageLogger:
             table=table,
             error=str(error),
             error_type=type(error).__name__,
-            **kwargs
+            **kwargs,
         )
 
 
@@ -170,4 +175,4 @@ class StorageLogger:
 setup_logging()
 
 # Create default loggers
-logger = get_logger(__name__) 
+logger = get_logger(__name__)

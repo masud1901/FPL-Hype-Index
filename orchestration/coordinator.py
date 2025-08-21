@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Dict, Any, Optional, List
 import importlib
 
-from config.settings import config
+from config.settings import get_settings
 from storage.database import db_manager
 from storage.repositories import (
     PlayerRepository,
@@ -139,7 +139,8 @@ class DataCoordinator:
 
             # Get scraper class and instantiate
             scraper_class = self._get_scraper_class(scraper_name)
-            scraper = scraper_class(config.scraper.__dict__)
+            settings = get_settings()
+            scraper = scraper_class(settings.__dict__)
 
             # Apply config overrides if provided
             if config_overrides:

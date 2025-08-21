@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # PostgreSQL Database (Main Data Storage)
   database:
     image: postgres:15
     environment:
@@ -19,7 +20,51 @@ services:
       retries: 5
     restart: unless-stopped
 
-  data_collector:
+  # Redis Cache (Performance Optimization)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # FPL Prediction Engine API
+  fpl-api:
+    build: .
+    ports:
+      - "8001:8000"
+    environment:
+      - DB_HOST=database
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-fpl_data}
+      - DB_USER=${DB_USER:-fpl_user}
+      - DB_PASSWORD=${DB_PASSWORD:-fpl_password}
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=INFO
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Data Collection Service (Phase 1)
+  data-collector:
     build: .
     environment:
       - DB_HOST=database
@@ -27,17 +72,20 @@ services:
       - DB_NAME=${DB_NAME:-fpl_data}
       - DB_USER=${DB_USER:-fpl_user}
       - DB_PASSWORD=${DB_PASSWORD:-fpl_password}
-      - LOG_LEVEL=${LOG_LEVEL:-INFO}
-      - ENVIRONMENT=${ENVIRONMENT:-development}
-    volumes:
-      - ./logs:/app/logs
-      - .:/app
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=INFO
     depends_on:
       database:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    command: python -m scripts.run_scrapers
     restart: unless-stopped
-    command: ["python", "-m", "scripts.run_scrapers"]
 
+  # Scheduler Service (Phase 1)
   scheduler:
     build: .
     environment:
@@ -46,18 +94,21 @@ services:
       - DB_NAME=${DB_NAME:-fpl_data}
       - DB_USER=${DB_USER:-fpl_user}
       - DB_PASSWORD=${DB_PASSWORD:-fpl_password}
-      - LOG_LEVEL=${LOG_LEVEL:-INFO}
-      - ENVIRONMENT=${ENVIRONMENT:-development}
-    volumes:
-      - ./logs:/app/logs
-      - .:/app
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=INFO
     depends_on:
       database:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    command: python -m orchestration.scheduler
     restart: unless-stopped
-    command: ["python", "-m", "orchestration.scheduler"]
 
-  api:
+  # Test runner service
+  test-runner:
     build: .
     environment:
       - DB_HOST=database
@@ -65,38 +116,18 @@ services:
       - DB_NAME=${DB_NAME:-fpl_data}
       - DB_USER=${DB_USER:-fpl_user}
       - DB_PASSWORD=${DB_PASSWORD:-fpl_password}
-      - LOG_LEVEL=${LOG_LEVEL:-INFO}
-      - ENVIRONMENT=${ENVIRONMENT:-development}
-    volumes:
-      - ./logs:/app/logs
-      - .:/app
-    ports:
-      - "8001:8000"
+      - REDIS_URL=redis://redis:6379
+      - LOG_LEVEL=DEBUG
     depends_on:
       database:
         condition: service_healthy
-    restart: unless-stopped
-    command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-
-  test:
-    build: .
-    environment:
-      - DB_HOST=database
-      - DB_PORT=5432
-      - DB_NAME=${DB_NAME:-fpl_data}
-      - DB_USER=${DB_USER:-fpl_user}
-      - DB_PASSWORD=${DB_PASSWORD:-fpl_password}
-      - LOG_LEVEL=${LOG_LEVEL:-INFO}
-      - ENVIRONMENT=${ENVIRONMENT:-development}
+      redis:
+        condition: service_healthy
     volumes:
       - ./logs:/app/logs
-      - .:/app
-    depends_on:
-      database:
-        condition: service_healthy
-    command: ["python", "scripts/test_phase4_docker.py"]
-    profiles:
-      - test
+      - ./data:/app/data
+    command: python scripts/test_prediction_engine.py
 
 volumes:
-  postgres_data: 
+  postgres_data:
+  redis_data: 

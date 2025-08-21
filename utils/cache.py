@@ -25,7 +25,7 @@ class RedisCache:
     """
 
     def __init__(
-        self, redis_url: str = "redis://localhost:6379", default_ttl: int = 3600
+        self, redis_url: str = "redis://localhost:6379", default_ttl: int = 86400
     ):
         """
         Initialize Redis cache connection.
@@ -237,8 +237,11 @@ def get_cache() -> RedisCache:
     """Get global cache instance."""
     global _cache_instance
     if _cache_instance is None:
-        # Initialize with default settings
-        _cache_instance = RedisCache()
+        # Initialize with settings from environment
+        from config.settings import get_settings
+
+        settings = get_settings()
+        _cache_instance = RedisCache(redis_url=settings.redis_url)
     return _cache_instance
 
 

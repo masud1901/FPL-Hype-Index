@@ -3,104 +3,83 @@ Application configuration settings.
 """
 
 import os
-from dataclasses import dataclass, field
 from typing import Optional
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
+from pydantic_settings import BaseSettings
 
 
-@dataclass
-class ScraperConfig:
-    """Configuration for scrapers and data sources."""
+class Settings(BaseSettings):
+    """Application settings with environment variable support."""
 
-    fpl_api_url: str = "https://fantasy.premierleague.com/api/"
-    understat_url: str = "https://understat.com/"
-    fbref_url: str = "https://fbref.com/"
-    transfermarkt_url: str = "https://www.transfermarkt.com/"
-    whoscored_url: str = "https://www.whoscored.com/"
-    football_data_url: str = "https://api.football-data.org/v4"
+    # Database Configuration (PostgreSQL - Main Storage)
+    DB_HOST: str = os.getenv("DB_HOST", "localhost")
+    DB_PORT: int = int(os.getenv("DB_PORT", "5432"))
+    DB_NAME: str = os.getenv("DB_NAME", "fpl_data")
+    DB_USER: str = os.getenv("DB_USER", "fpl_user")
+    DB_PASSWORD: str = os.getenv("DB_PASSWORD", "fpl_password")
 
-    # API Keys
-    football_data_api_key: str = os.getenv("FOOTBALL_DATA_API_KEY", "")
+    # Redis Configuration (Caching Layer)
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379")
+    REDIS_HOST: str = os.getenv("REDIS_HOST", "localhost")
+    REDIS_PORT: int = int(os.getenv("REDIS_PORT", "6379"))
+    REDIS_DB: int = int(os.getenv("REDIS_DB", "0"))
+    REDIS_PASSWORD: Optional[str] = os.getenv("REDIS_PASSWORD")
 
-    # Request settings
-    request_timeout: int = int(os.getenv("REQUEST_TIMEOUT", "30"))
-    max_retries: int = int(os.getenv("MAX_RETRIES", "3"))
-    rate_limit_delay: float = float(os.getenv("RATE_LIMIT_DELAY", "1.0"))
+    # Application Configuration
+    LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
+    DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
 
-    # User agent for web scraping
-    user_agent: str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+    # API Configuration
+    API_HOST: str = os.getenv("API_HOST", "0.0.0.0")
+    API_PORT: int = int(os.getenv("API_PORT", "8000"))
+    API_VERSION: str = "v1"
 
+    # Prediction Engine Configuration
+    PREDICTION_CACHE_TTL: int = int(os.getenv("PREDICTION_CACHE_TTL", "3600"))  # 1 hour
+    TRANSFER_CACHE_TTL: int = int(os.getenv("TRANSFER_CACHE_TTL", "1800"))  # 30 minutes
+    BACKTEST_CACHE_TTL: int = int(os.getenv("BACKTEST_CACHE_TTL", "7200"))  # 2 hours
 
-@dataclass
-class DatabaseConfig:
-    """Database connection configuration."""
+    # Scraper Configuration
+    SCRAPER_TIMEOUT: int = int(os.getenv("SCRAPER_TIMEOUT", "30"))
+    SCRAPER_MAX_RETRIES: int = int(os.getenv("SCRAPER_MAX_RETRIES", "3"))
+    SCRAPER_RATE_LIMIT: float = float(os.getenv("SCRAPER_RATE_LIMIT", "1.0"))
 
-    host: str = os.getenv("DB_HOST", "localhost")
-    port: int = int(os.getenv("DB_PORT", "5432"))
-    database: str = os.getenv("DB_NAME", "fpl_data")
-    username: str = os.getenv("DB_USER", "fpl_user")
-    password: str = os.getenv("DB_PASSWORD", "")
+    # FPL API Configuration
+    FPL_API_BASE_URL: str = "https://fantasy.premierleague.com/api/"
+    FPL_API_TIMEOUT: int = int(os.getenv("FPL_API_TIMEOUT", "30"))
+
+    # Data Collection Configuration
+    DATA_COLLECTION_INTERVAL: int = int(
+        os.getenv("DATA_COLLECTION_INTERVAL", "3600")
+    )  # 1 hour
+    DATA_RETENTION_DAYS: int = int(os.getenv("DATA_RETENTION_DAYS", "365"))
+
+    # Performance Configuration
+    MAX_WORKERS: int = int(os.getenv("MAX_WORKERS", "4"))
+    BATCH_SIZE: int = int(os.getenv("BATCH_SIZE", "100"))
 
     @property
-    def connection_string(self) -> str:
-        """Generate SQLAlchemy connection string."""
-        return f"postgresql://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}"
+    def database_url(self) -> str:
+        """Get PostgreSQL database URL."""
+        return f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     @property
-    def async_connection_string(self) -> str:
-        """Generate async SQLAlchemy connection string."""
-        return f"postgresql+asyncpg://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}"
+    def redis_url(self) -> str:
+        """Get Redis URL."""
+        return self.REDIS_URL
+
+    class Config:
+        env_file = ".env"
+        case_sensitive = True
 
 
-@dataclass
-class PredictionConfig:
-    """Configuration for prediction engine."""
-
-    # Model settings
-    model_version: str = os.getenv("MODEL_VERSION", "3.0")
-    confidence_threshold: float = float(os.getenv("CONFIDENCE_THRESHOLD", "0.7"))
-    
-    # Caching settings
-    cache_enabled: bool = os.getenv("CACHE_ENABLED", "true").lower() == "true"
-    cache_ttl: int = int(os.getenv("CACHE_TTL", "3600"))  # 1 hour
-    
-    # Performance settings
-    max_recommendations: int = int(os.getenv("MAX_RECOMMENDATIONS", "5"))
-    backtest_lookback_seasons: int = int(os.getenv("BACKTEST_LOOKBACK_SEASONS", "2"))
-    
-    # Feature engineering settings
-    feature_lookback_gameweeks: int = int(os.getenv("FEATURE_LOOKBACK_GAMEWEEKS", "6"))
-    fixture_lookahead_gameweeks: int = int(os.getenv("FIXTURE_LOOKAHEAD_GAMEWEEKS", "5"))
+# Global settings instance
+_settings: Optional[Settings] = None
 
 
-@dataclass
-class AppConfig:
-    """Main application configuration."""
-
-    # Environment
-    environment: str = os.getenv("ENVIRONMENT", "development")
-    log_level: str = os.getenv("LOG_LEVEL", "INFO")
-    debug: bool = os.getenv("DEBUG", "false").lower() == "true"
-
-    # Sub-configurations
-    scraper: ScraperConfig = field(default_factory=ScraperConfig)
-    database: DatabaseConfig = field(default_factory=DatabaseConfig)
-    prediction: PredictionConfig = field(default_factory=PredictionConfig)
-
-    # Application settings
-    timezone: str = "UTC"
-    max_workers: int = int(os.getenv("MAX_WORKERS", "4"))
-
-    def __post_init__(self):
-        """Validate configuration after initialization."""
-        if self.environment == "production" and not self.database.password:
-            raise ValueError(
-                "Database password must be set via DB_PASSWORD environment variable"
-            )
-
-
-# Global configuration instance
-config = AppConfig()
+def get_settings() -> Settings:
+    """Get application settings singleton."""
+    global _settings
+    if _settings is None:
+        _settings = Settings()
+    return _settings

@@ -10,7 +10,7 @@ import asyncio
 from datetime import datetime, timedelta
 from typing import Dict, Any, List, Optional
 
-from config.settings import config
+from config.settings import get_settings
 from utils.logger import get_logger
 from orchestration.health_checker import get_system_health, get_health_summary
 from orchestration.coordinator import DataCoordinator

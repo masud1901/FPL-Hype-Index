@@ -6,7 +6,7 @@ from typing import AsyncGenerator
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import sessionmaker
-from config.settings import config
+from config.settings import get_settings
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -24,18 +24,20 @@ class DatabaseManager:
     def initialize(self):
         """Initialize database engines and session factories."""
         try:
+            settings = get_settings()
+
             # Create sync engine
             self.sync_engine = create_engine(
-                config.database.connection_string,
-                echo=config.debug,
+                settings.database_url,
+                echo=settings.DEBUG,
                 pool_pre_ping=True,
                 pool_recycle=300,
             )
 
             # Create async engine
             self.async_engine = create_async_engine(
-                config.database.async_connection_string,
-                echo=config.debug,
+                settings.database_url.replace("postgresql://", "postgresql+asyncpg://"),
+                echo=settings.DEBUG,
                 pool_pre_ping=True,
                 pool_recycle=300,
             )
